@@ -179,10 +179,10 @@ def main():
             time.sleep(1)
 
         lcd_string("RAM total: %s" % RAM_TOTAL_HUMAN_READABLE, LCD_LINE_1)
-        for i in range(3):
+        for _ in range(3):
             lcd_string("RAM used: %s" % size_human_readable(psutil.virtual_memory().used), LCD_LINE_2)
             time.sleep(1)
-        for i in range(3):
+        for _ in range(3):
             lcd_string("RAM used: %0.1f%%" % psutil.virtual_memory().percent, LCD_LINE_2)
             time.sleep(1)
 
@@ -205,8 +205,7 @@ def main():
         lcd_string(get_hostname(), LCD_LINE_2, scrolling=True)
         time.sleep(3)
 
-        for item in get_ips():
-            iface_name, ip_ = item
+        for iface_name, ip_ in get_ips():
             lcd_string("iface: " + iface_name, LCD_LINE_1)
             lcd_string(ip_, LCD_LINE_2)
             time.sleep(3)
