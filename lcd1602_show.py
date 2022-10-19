@@ -13,7 +13,7 @@ except ImportError:
 import psutil
 
 from lcd1602 import (
-    LCD_LINE_1, LCD_LINE_2, lcd_init, lcd_string, lcd_cleanup, lcd_custom_char
+    LCD_LINE_1, LCD_LINE_2, lcd_init, lcd_string, lcd_cleanup, lcd_custom_char, lcd_toggle_backlight
 )
 
 
@@ -110,6 +110,8 @@ def main():
     # Initialise display
     lcd_init()
 
+    lcd_toggle_backlight(True)
+
     custom_chars = [
         # bell
         bytearray([0x04, 0x0e, 0x0e, 0x0e, 0x1f, 0x00, 0x04, 0x00]),
@@ -164,6 +166,9 @@ def main():
 
     while True:
         datetime_now = datetime.datetime.now()
+        # 6:00~22:00打开背光, 其他时间关闭背光
+        lcd_toggle_backlight(6 <= datetime_now.hour < 22)
+
         lcd_string(datetime_now.strftime("%Y-%m-%d %a"), LCD_LINE_1)
         for _ in range(5):
             if (datetime_now.hour, datetime_now.minute, datetime_now.second) == (0, 0, 0):

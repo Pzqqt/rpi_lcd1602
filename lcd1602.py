@@ -15,6 +15,9 @@ LCD_D5 = 24
 LCD_D6 = 23
 LCD_D7 = 18
 
+# 背光电源引脚 (如果背光常亮请设置为None)
+LCD_BL_POW = 17
+
 # Define some device constants
 LCD_WIDTH = 16  # Maximum characters per line
 LCD_DAT = True
@@ -72,6 +75,8 @@ def lcd_init():
     GPIO.setup(LCD_D5, GPIO.OUT)  # DB5
     GPIO.setup(LCD_D6, GPIO.OUT)  # DB6
     GPIO.setup(LCD_D7, GPIO.OUT)  # DB7
+    if LCD_BL_POW is not None:
+        GPIO.setup(LCD_BL_POW, GPIO.OUT)
 
     # Initialise display
     lcd_byte(0x33, LCD_CMD)  # 110011 Initialise
@@ -81,6 +86,10 @@ def lcd_init():
     lcd_byte(0x28, LCD_CMD)  # 101000 Data length, number of lines, font size
     lcd_byte(0x01, LCD_CMD)  # 000001 Clear display
     time.sleep(E_DELAY)
+
+def lcd_toggle_backlight(enable: bool):
+    if LCD_BL_POW is not None:
+        GPIO.output(LCD_BL_POW, enable)
 
 def lcd_string(message: str, line, scrolling=False):
     # Send string to display
